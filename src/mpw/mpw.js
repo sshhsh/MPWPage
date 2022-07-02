@@ -73,14 +73,14 @@ class MPW {
 		
 		// Derive the master key w/ scrypt
 		// why is buflen 64*8==512 and not 32*8==256 ?
-		let key = window.scrypt(password, salt, 32768/*= n*/, 8/*= r*/, 2/*= p*/, 64/*= buflen*/);
+		let key = self.scrypt(password, salt, 32768/*= n*/, 8/*= r*/, 2/*= p*/, 64/*= buflen*/);
 		
 		// If the Web Crypto API is supported import the key, otherwise return
-		return window.crypto.subtle
+		return self.crypto.subtle
 			? key.then(
 				// Import the key into WebCrypto to use later with sign while
 				// being non-extractable
-				key => window.crypto.subtle.importKey("raw", key, {
+				key => self.crypto.subtle.importKey("raw", key, {
 					name: "HMAC",
 					hash: {
 						name: "SHA-256"
@@ -157,10 +157,10 @@ class MPW {
 		}
 		
 		// If the Web Crypto API is supported use it, otherwise rely on crypto-js
-		if (window.crypto.subtle) {
+		if (self.crypto.subtle) {
 			return this.key.then(
 				// Sign data using HMAC-SHA-256 w/ this.key
-				key => window.crypto.subtle.sign({
+				key => self.crypto.subtle.sign({
 					name: "HMAC",
 					hash: {
 						name: "SHA-256"
@@ -383,3 +383,5 @@ MPW.passchars = {
 	x: "AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz0123456789!@#$%^&*()",
 	" ": " "
 };
+
+self.MPW = MPW;

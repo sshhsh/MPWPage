@@ -4,7 +4,7 @@ International License. To view a copy of this license, visit
 http://creativecommons.org/licenses/by/4.0/ or see LICENSE. */
 
 // https://bugzilla.mozilla.org/show_bug.cgi?id=554827
-window.pbkdf2 = function () {
+self.pbkdf2 = function () {
 	// https://github.com/golang/crypto/blob/master/pbkdf2/pbkdf2.go
 	function pbkdf2_js(password, salt, iter, keyLen, hash) {
 		switch ((hash.name || hash).toUpperCase()) {
@@ -40,7 +40,7 @@ window.pbkdf2 = function () {
 		
 		data.set(salt);
 		
-		return window.crypto.subtle.importKey("raw", password, {
+		return self.crypto.subtle.importKey("raw", password, {
 				name: "HMAC",
 				hash: hash
 			}, false/*not extractable*/, [ "sign" ]).then(function (key) {
@@ -49,14 +49,14 @@ window.pbkdf2 = function () {
 				
 				for (let block = 1, dki = 0; block <= numBlocks; block++, dki += hashLen) {
 					x = x.then(() => dataView.setUint32(salt.length, block, false/*big-endian*/))
-						.then(() => window.crypto.subtle.sign({
+						.then(() => self.crypto.subtle.sign({
 							name: "HMAC",
 							hash: hash
 						}, key, data))
 						.then(pdk => (dk.set(new Uint8Array(pdk), dki), pdk));
 					
 					for (let n = 2; n <= iter; n++) {
-						x = x.then(U => window.crypto.subtle.sign({
+						x = x.then(U => self.crypto.subtle.sign({
 								name: "HMAC",
 								hash: hash
 							}, key, U)).then(function (U) {
@@ -75,16 +75,16 @@ window.pbkdf2 = function () {
 			});
 	}
 	
-	if (window.crypto.subtle) {
+	if (self.crypto.subtle) {
 		return function (password, salt, iter, keyLen, hash) {
-			let self = this;
+			// let self = this;
 			let args = arguments;
 			
-			return window.crypto.subtle.importKey("raw", password, {
+			return self.crypto.subtle.importKey("raw", password, {
 					name: "PBKDF2",
 					hash: hash
 				}, false/*not extractable*/, [ "deriveBits" ])
-				.then(key => window.crypto.subtle.deriveBits({
+				.then(key => self.crypto.subtle.deriveBits({
 					name: "PBKDF2",
 					salt: salt,
 					iterations: iter,
@@ -95,7 +95,7 @@ window.pbkdf2 = function () {
 					// PBKDF2-HMAC is not supported by the Web Crytpto API if either a
 					// NotSupportedError or a OperationError are emmited
 					(err.name === "OperationError" || err.name === "NotSupportedError")
-						? (window.pbkdf2 = pbkdf2_js).apply(self, args)
+						? (self.pbkdf2 = pbkdf2_js).apply(self, args)
 						// Limited support for PBKDF2-HMAC-SHA exists if InvalidAccessError
 						// is emmited for PBKDF2-HMAC-SHA{256,384,512}
 						: (err.name === "InvalidAccessError")
@@ -134,7 +134,7 @@ window.pbkdf2 = function () {
 				// setImmediate (a 0-delay setTimeout of sorts) is needed
 				// here so that this code is asynchronous and will not block
 				// the UI thread
-				window.setImmediate(function () {
+				self.setTimeout(function () {
 					// Create crypto-js WordArrays from Uint8Arrays password and salt
 					password = CryptoJS.lib.WordArray.create(password);
 					salt     = CryptoJS.lib.WordArray.create(salt);

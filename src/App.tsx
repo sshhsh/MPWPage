@@ -1,15 +1,32 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import logo from './logo.svg'
 import './App.css'
+import { generate, login } from './mpw';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(1);
+  const [pass, setPass] = useState('');
+  
+  useEffect(() => {
+    login({
+      name: 'aa',
+      password: 'aa',
+    })
+  }, []);
+  useEffect(() => {
+    generate({
+      site: 'aa',
+      counter: count,
+    }).then(res => {
+      setPass(res);
+    });
+  }, [count]);
 
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vitsdf e + React!</p>
+        <p>{pass}</p>
         <p>
           <button type="button" onClick={() => setCount((count) => count + 1)}>
             count is: {count}

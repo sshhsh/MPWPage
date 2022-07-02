@@ -3,7 +3,7 @@
 International License. To view a copy of this license, visit
 http://creativecommons.org/licenses/by/4.0/ or see LICENSE. */
 
-window.scrypt = function () {
+self.scrypt = function () {
 	// https://github.com/golang/crypto/blob/master/scrypt/scrypt.go
 	function salsaXOR(tmp, inp, out) {
 		let w = [ ];
@@ -130,7 +130,7 @@ window.scrypt = function () {
 			// setImmediate (a 0-delay setTimeout of sorts) is needed
 			// here so that this code is asynchronous and will not block
 			// the UI thread
-			b = b.then(b => new Promise((resolve, reject) => window.setImmediate(() => (smix(b.subarray(i * 128 * r), r, N, v, x, y), resolve(b)))));
+			b = b.then(b => new Promise((resolve, reject) => self.setTimeout(() => (smix(b.subarray(i * 128 * r), r, N, v, x, y), resolve(b)))));
 		}
 		
 		return b.then(b => pbkdf2(passphrase, b, 1, keyLen, "SHA-256"));
