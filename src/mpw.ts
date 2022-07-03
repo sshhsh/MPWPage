@@ -1,7 +1,14 @@
+import init from './wasm/mpw.wasm?init'
+
+const go = (async () => {
+  const res = new Go();
+  const ins = await init(res.importObject);
+  res.run(ins);
+})();
+
 export interface UserParams {
   name: string;
   password: string;
-  version?: number;
 }
 
 export interface PassParams {
@@ -12,35 +19,14 @@ export interface PassParams {
   NS?: string;
 }
 
-const worker = new Worker(new URL("./mpw/worker.js", import.meta.url), { type: 'module' });
-const callbackMap: Map<number, (res: string) => void> = new Map();
-worker.onmessage = (ev) => {
-  const { id, res } = ev.data;
-  callbackMap.get(id)?.(res);
-  callbackMap.delete(id);
-};
-
-let id = 0;
-function genID(): number {
-  if (id >= Number.MAX_SAFE_INTEGER) {
-    id = 0;
-  }
-  return id++;
-}
-async function postMessage(params: UserParams | PassParams): Promise<string> {
-  const id = genID();
-  return new Promise((resolve) => {
-    callbackMap.set(id, (res) => {
-      resolve(res);
-    })
-    worker.postMessage({id, ...params});
-  });
-}
 
 export async function login(params: UserParams): Promise<void> {
-  await postMessage(params);
+  await go;
+  wasmLogin(params.name, params.password);
 }
 
 export async function generate(params: PassParams): Promise<string> {
-  return await postMessage(params);
+  await go;
+  return wasmGenerate(params.site, params.counter ?? 0, params.context ?? '', params.template ?? 'long', params.NS ?? '');
 }
+
