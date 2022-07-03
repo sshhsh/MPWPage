@@ -13,9 +13,9 @@ export interface UserParams {
 
 export interface PassParams {
   site: string;
-  counter?: number;
-  context?: null | string;
-  template?: string;
+  counter: number;
+  context?: string;
+  template: Template;
   NS?: string;
 }
 
@@ -25,8 +25,17 @@ export async function login(params: UserParams): Promise<void> {
   wasmLogin(params.name, params.password);
 }
 
-export async function generate(params: PassParams): Promise<string> {
-  await go;
-  return wasmGenerate(params.site, params.counter ?? 0, params.context ?? '', params.template ?? 'long', params.NS ?? '');
+export function generate(params: PassParams): string {
+  return wasmGenerate(params.site, params.counter ?? 0, params.context ?? '', params.template ?? Template.long, params.NS ?? '');
 }
 
+export enum Template {
+  maximum = 'maximum',
+  long = 'long',
+  medium = 'medium',
+  basic = 'basic',
+  short = 'short',
+  pin = 'pin',
+  name = 'name',
+  phrase = 'phrase',
+}

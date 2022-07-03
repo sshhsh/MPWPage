@@ -1,62 +1,21 @@
-import { useEffect, useState } from 'react'
-import logo from './logo.svg'
-import './App.css'
-import { generate, login } from './mpw';
+import React from "react";
+import 'antd/dist/antd.dark.css';
+import { observer } from "mobx-react"
+import { Store } from "./store/store"
+import { generate, login } from "./mpw";
+import { Login } from "./components/login"
+import { Logged } from "./components/logged";
 
-function App() {
-  const [count, setCount] = useState(1);
-  const [pass, setPass] = useState('');
-  
-  useEffect(() => {
-    login({
-      name: 'aa',
-      password: 'aa',
-    })
-  }, []);
-  useEffect(() => {
-    generate({
-      site: 'aa',
-      counter: count,
-    }).then(res => {
-      setPass(res);
-    });
-  }, [count]);
-
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>{pass}</p>
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
-    </div>
-  )
-}
-
-export default App
+const App = observer(({ store }: { store: Store }) => {
+  if (store.isLogin) {
+    return (
+      <Logged store={store}/>
+    );
+  } else {
+    return <Login user={store.currentUser} onLogin={async (name, password) => {
+      await login({name, password});
+      store.login(name);
+    }}></Login>
+  }
+});
+export default App;

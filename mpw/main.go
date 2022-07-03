@@ -8,11 +8,16 @@ import (
 func main() {
 	done := make(chan struct{}, 0)
 	js.Global().Set("wasmLogin", js.FuncOf(wasmLogin))
+	js.Global().Set("wasmIsLogin", js.FuncOf(wasmIsLogin))
 	js.Global().Set("wasmGenerate", js.FuncOf(wasmGenerate))
 	<-done
 }
 
 var mpw MPW
+
+func wasmIsLogin(this js.Value, args []js.Value) interface{} {
+	return mpw.key != nil
+}
 
 func wasmLogin(this js.Value, args []js.Value) interface{} {
 	mpw2, err := login(args[0].String(), args[1].String())
@@ -21,7 +26,7 @@ func wasmLogin(this js.Value, args []js.Value) interface{} {
 		log.Println(err)
 		return "login failed"
 	}
-	return "login success"
+	return true
 }
 
 func wasmGenerate(this js.Value, args []js.Value) interface{} {
