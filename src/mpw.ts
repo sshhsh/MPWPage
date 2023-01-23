@@ -1,4 +1,3 @@
-import './wasm_exec.js'
 import init from './wasm/mpw.wasm?init'
 
 const go = (async () => {
