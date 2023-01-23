@@ -16,7 +16,7 @@ export const SiteContainer = observer(({ user }: params) => {
         padding: "20px",
       }}
     >
-    {Array.from(user.sites.values()).map((site) => <div key={site.site}>
+    {user.sites.map(([, site]) => <div key={site.site}>
         {site.site}
     </div>)}
     </div>

@@ -19,6 +19,8 @@ export interface PassParams {
   NS?: string;
 }
 
+declare function wasmLogin(name: string, pass: string): void;
+declare function wasmGenerate(name: string, counter: number, context: string, template: string, NS: string): string;
 
 export async function login(params: UserParams): Promise<void> {
   await go;

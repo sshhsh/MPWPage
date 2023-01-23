@@ -11,7 +11,7 @@ type params = {
 };
 
 export const Logged = observer(({ store }: params) => {
-    const user = store.users.get(store.currentUser ?? '');
+  const user = new Map(store.users).get(store.currentUser ?? '');
   return (
     <div
       style={{

@@ -5,10 +5,11 @@ import { makePersistable } from 'mobx-persist-store';
 
 export class User {
     name: string
-    sites: Map<string, Site> = new Map();
+    sites: [string, Site][];
 
-    constructor(name: string) {
+    constructor(name: string, sites: [string, Site][] = []) {
         this.name = name;
+        this.sites = sites;
         makeAutoObservable(this);
         // makePersistable(this, { name: 'UserStore', properties: ['name', 'sites'], storage: window.localStorage });
     }
@@ -17,9 +18,9 @@ export class User {
         console.log('aaaa')
         const site = new Site(param);
         const key = site.toString();
-        if (this.sites.has(key)) {
+        if (new Map(this.sites).has(key)) {
             return;
         }
-        this.sites.set(key, site);
+        this.sites.push([key, site]);
     }
 }
