@@ -58,7 +58,7 @@ export const NewSite = observer(({ user }: params) => {
         </Select>
         <InputNumber size="large"
           value={counter}
-          onChange={ n => setCounter(Math.max(1, n))}
+          onChange={ n => setCounter(Math.max(1, n ?? 1))}
           style={{
             flexBasis: '20vw',
             margin: "10px",
