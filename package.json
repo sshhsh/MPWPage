@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "npm run build-wasm && npm run cpoy-wasm-exec && vite",
-    "build": "npm run build-wasm && npm run cpoy-wasm-exec && tsc && vite build",
+    "build": "npm run build-wasm && tsc && vite build",
     "build-wasm": "cd mpw && cross-env GOOS=js GOARCH=wasm go build -o ../src/wasm/mpw.wasm",
     "cpoy-wasm-exec": "run-script-os",
     "cpoy-wasm-exec:default": "cp \"$(go env GOROOT)/misc/wasm/wasm_exec.js\" ./public/wasm",
