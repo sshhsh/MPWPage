@@ -1,4 +1,4 @@
-import init from './wasm/mpw.wasm?init'
+import init from "./wasm/mpw.wasm?init";
 
 const go = (async () => {
   const res = new Go();
@@ -20,7 +20,13 @@ export interface PassParams {
 }
 
 declare function wasmLogin(name: string, pass: string): void;
-declare function wasmGenerate(name: string, counter: number, context: string, template: string, NS: string): string;
+declare function wasmGenerate(
+  name: string,
+  counter: number,
+  context: string,
+  template: string,
+  NS: string
+): string;
 
 export async function login(params: UserParams): Promise<void> {
   await go;
@@ -28,19 +34,25 @@ export async function login(params: UserParams): Promise<void> {
 }
 
 export function generate(params: PassParams): string {
-  if (params.site === '') {
+  if (params.site === "") {
     return "";
   }
-  return wasmGenerate(params.site, params.counter ?? 0, params.context ?? '', params.template ?? Template.long, params.NS ?? '');
+  return wasmGenerate(
+    params.site,
+    params.counter ?? 0,
+    params.context ?? "",
+    params.template ?? Template.long,
+    params.NS ?? ""
+  );
 }
 
 export enum Template {
-  maximum = 'maximum',
-  long = 'long',
-  medium = 'medium',
-  basic = 'basic',
-  short = 'short',
-  pin = 'pin',
-  name = 'name',
-  phrase = 'phrase',
+  maximum = "maximum",
+  long = "long",
+  medium = "medium",
+  basic = "basic",
+  short = "short",
+  pin = "pin",
+  name = "name",
+  phrase = "phrase",
 }

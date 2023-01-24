@@ -11,7 +11,7 @@ type params = {
 };
 
 export const Logged = observer(({ store }: params) => {
-  const user = new Map(store.users).get(store.currentUser ?? '');
+  const user = new Map(store.users).get(store.currentUser ?? "");
   return (
     <div
       style={{
@@ -39,8 +39,8 @@ export const Logged = observer(({ store }: params) => {
           Logout
         </Button>
       </div>
-      {user && <NewSite user={user} initSite={store.currentSite}/>}
-      {user && <SiteContainer sites={user.sites} store={store}/>}
+      {user && <NewSite user={user} initSite={store.currentSite} />}
+      {user && <SiteContainer sites={user.sites} store={store} />}
     </div>
   );
 });

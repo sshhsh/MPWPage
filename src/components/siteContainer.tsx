@@ -4,9 +4,9 @@ import { Site } from "../store/entity/site";
 import { Store } from "../store/store";
 
 type params = {
-  sites: [string, Site][],
-  store: Store,
-}
+  sites: [string, Site][];
+  store: Store;
+};
 
 export const SiteContainer = observer(({ sites, store }: params) => {
   return (
@@ -20,10 +20,9 @@ export const SiteContainer = observer(({ sites, store }: params) => {
       <List
         bordered
         dataSource={[...sites]}
-        rowKey={(([key,]) => key)}
+        rowKey={([key]) => key}
         renderItem={([, site]) => (
-          <List.Item
-            onClick={() => store.showSite(site)}>
+          <List.Item onClick={() => store.showSite(site)}>
             {site.site}
           </List.Item>
         )}
