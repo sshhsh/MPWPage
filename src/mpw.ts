@@ -28,6 +28,9 @@ export async function login(params: UserParams): Promise<void> {
 }
 
 export function generate(params: PassParams): string {
+  if (params.site === '') {
+    return "";
+  }
   return wasmGenerate(params.site, params.counter ?? 0, params.context ?? '', params.template ?? Template.long, params.NS ?? '');
 }
 

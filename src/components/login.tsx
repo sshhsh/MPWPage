@@ -17,6 +17,8 @@ export const Login = observer(({ user, onLogin }: params) => {
         display: "flex",
         flexDirection: "column",
         padding: "20px",
+        height: "100vh",
+        justifyContent: "center",
       }}
     >
       <Input placeholder="name" value={name} size="large" onChange={(v) => setName(v.target.value)} style={{

@@ -1,4 +1,4 @@
-import { PassParams } from './../mpw';
+import { PassParams, Template } from './../mpw';
 import { makeAutoObservable, runInAction } from "mobx"
 import { makePersistable } from "mobx-persist-store";
 import { User } from "./entity/user"
@@ -7,8 +7,9 @@ import { replacer, reviver } from './serialization';
 
 export class Store {
     users: [string, User][] = [];
-    currentUser?: string
-    isLogin = false
+    currentUser?: string;
+    currentSite: Site = new Site({site: "", counter: 1, template: Template.long});
+    isLogin = false;
     constructor() {
         makeAutoObservable(this);
         makePersistable<this, keyof this>(this, { name: 'SampleStore', properties: [
@@ -35,5 +36,8 @@ export class Store {
     }
     logout() {
         this.isLogin = false;
+    }
+    showSite(site: Site) {
+        this.currentSite = site;
     }
 }

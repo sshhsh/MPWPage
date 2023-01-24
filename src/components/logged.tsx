@@ -39,8 +39,8 @@ export const Logged = observer(({ store }: params) => {
           Logout
         </Button>
       </div>
-      {user && <NewSite user={user}/>}
-      {user && <SiteContainer user={user}/>}
+      {user && <NewSite user={user} initSite={store.currentSite}/>}
+      {user && <SiteContainer sites={user.sites} store={store}/>}
     </div>
   );
 });

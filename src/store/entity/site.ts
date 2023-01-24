@@ -1,7 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 import { PassParams } from './../../mpw';
 import { Template } from "../../mpw"
-import { makePersistable } from 'mobx-persist-store';
 
 export class Site implements PassParams {
     site: string
@@ -16,10 +15,21 @@ export class Site implements PassParams {
         this.context = param.context;
         this.NS = param.NS;
         makeAutoObservable(this);
-        // makePersistable(this, { name: 'SiteStore', properties: ['site', 'counter', 'template', 'context', 'NS'], storage: window.localStorage });
     }
 
     toString(): string {
         return this.site + this.counter + this.template + this.context + this.NS;
+    }
+
+    setSite(site: string) {
+        this.site = site;
+    }
+
+    setCounter(counter: number) {
+        this.counter = counter;
+    }
+
+    setTemplate(template: Template) {
+        this.template = template;
     }
 }

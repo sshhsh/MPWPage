@@ -2,22 +2,16 @@ import { Input, InputNumber, Select, Typography } from "antd";
 import { observer } from "mobx-react-lite";
 import { useMemo, useState } from "react";
 import { generate, PassParams, Template } from "../mpw";
+import { Site } from "../store/entity/site";
 import { User } from "../store/entity/user";
 
 type params = {
   user: User,
+  initSite: Site,
 }
 
-export const NewSite = observer(({ user }: params) => {
-  const [site, setSite] = useState('')
-  const [counter, setCounter] = useState(1)
-  const [template, setTemplate] = useState(Template.long)
-  const pass = useMemo(()=>{
-    if (site === '') {
-      return '';
-    }
-    return generate({ site, counter, template });
-  }, [site, counter, template]);
+export const NewSite = observer(({ user, initSite }: params) => {
+  const pass = generate(initSite);
   return (
     <div
       style={{
@@ -42,8 +36,8 @@ export const NewSite = observer(({ user }: params) => {
             flexBasis: '60vw',
             margin: "10px",
           }}
-          value={site}
-          onChange={ e => setSite(e.target.value)}
+          value={initSite.site}
+          onChange={ e => initSite.setSite(e.target.value)}
         />
         <Select
           size="large"
@@ -51,28 +45,31 @@ export const NewSite = observer(({ user }: params) => {
             flexBasis: '20vw',
             margin: "10px",
           }}
-          value={template}
-          onChange={(e) => setTemplate(e)}
+          value={initSite.template}
+          onChange={(e) => initSite.setTemplate(e)}
         >
             {Object.keys(Template).map((str) => <Select.Option key={str}>{str}</Select.Option>)}
         </Select>
         <InputNumber size="large"
-          value={counter}
-          onChange={ n => setCounter(Math.max(1, n ?? 1))}
+          value={initSite.counter}
+          onChange={ n => initSite.setCounter(Math.max(1, n ?? 1))}
           style={{
             flexBasis: '20vw',
             margin: "10px",
           }}/>
       </div>
-      <Typography.Title
+      <div
           style={{
             flexShrink: 1,
             margin: "10px",
+            height: "40px",
+            fontSize: "35px",
+            fontWeight: "600",
           }}
           onClick={()=>{
-            user.addSite({ site, counter, template });
+            user.addSite(initSite);
           }}
-          >{pass}</Typography.Title>
+          >{pass}</div>
     </div>
   );
 });

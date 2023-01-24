@@ -1,13 +1,14 @@
-import { Button, Input } from "antd";
+import { List } from "antd";
 import { observer } from "mobx-react-lite";
-import { useState } from "react";
-import { User } from "../store/entity/user";
+import { Site } from "../store/entity/site";
+import { Store } from "../store/store";
 
 type params = {
-  user: User,
+  sites: [string, Site][],
+  store: Store,
 }
 
-export const SiteContainer = observer(({ user }: params) => {
+export const SiteContainer = observer(({ sites, store }: params) => {
   return (
     <div
       style={{
@@ -16,9 +17,17 @@ export const SiteContainer = observer(({ user }: params) => {
         padding: "20px",
       }}
     >
-    {user.sites.map(([, site]) => <div key={site.site}>
-        {site.site}
-    </div>)}
+      <List
+        bordered
+        dataSource={[...sites]}
+        rowKey={(([key,]) => key)}
+        renderItem={([, site]) => (
+          <List.Item
+            onClick={() => store.showSite(site)}>
+            {site.site}
+          </List.Item>
+        )}
+      />
     </div>
   );
 });

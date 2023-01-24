@@ -1,7 +1,6 @@
 import { PassParams } from './../../mpw';
 import { makeAutoObservable } from "mobx";
 import { Site } from "./site";
-import { makePersistable } from 'mobx-persist-store';
 
 export class User {
     name: string
@@ -11,7 +10,6 @@ export class User {
         this.name = name;
         this.sites = sites;
         makeAutoObservable(this);
-        // makePersistable(this, { name: 'UserStore', properties: ['name', 'sites'], storage: window.localStorage });
     }
 
     addSite(param: PassParams) {
