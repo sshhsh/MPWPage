@@ -1,14 +1,14 @@
-import { Input, InputNumber, Select, Typography } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+import { Button, Input, InputNumber, Select, Typography } from "antd";
 import { observer } from "mobx-react-lite";
-import { useMemo, useState } from "react";
 import { generate, PassParams, Template } from "../mpw";
 import { Site } from "../store/entity/site";
 import { User } from "../store/entity/user";
 
 type params = {
-  user: User,
-  initSite: Site,
-}
+  user: User;
+  initSite: Site;
+};
 
 export const NewSite = observer(({ user, initSite }: params) => {
   const pass = generate(initSite);
@@ -18,7 +18,7 @@ export const NewSite = observer(({ user, initSite }: params) => {
         display: "flex",
         flexDirection: "column",
         padding: "20px",
-        alignItems: 'center',
+        alignItems: "center",
       }}
     >
       <div
@@ -27,49 +27,75 @@ export const NewSite = observer(({ user, initSite }: params) => {
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
-          alignSelf: "stretch"
+          alignSelf: "stretch",
         }}
       >
         <Input
           size="large"
           style={{
-            flexBasis: '60vw',
+            flexBasis: "0",
+            flexGrow: 1,
             margin: "10px",
           }}
           value={initSite.site}
-          onChange={ e => initSite.setSite(e.target.value)}
+          onChange={(e) => initSite.setSite(e.target.value)}
         />
         <Select
           size="large"
           style={{
-            flexBasis: '20vw',
+            flexBasis: "60px",
             margin: "10px",
           }}
           value={initSite.template}
           onChange={(e) => initSite.setTemplate(e)}
         >
-            {Object.keys(Template).map((str) => <Select.Option key={str}>{str}</Select.Option>)}
+          {Object.keys(Template).map((str) => (
+            <Select.Option key={str}>{str}</Select.Option>
+          ))}
         </Select>
-        <InputNumber size="large"
+        <InputNumber
+          size="large"
           value={initSite.counter}
-          onChange={ n => initSite.setCounter(Math.max(1, n ?? 1))}
+          onChange={(n) => initSite.setCounter(Math.max(1, n ?? 1))}
           style={{
-            flexBasis: '20vw',
+            flexBasis: "40px",
             margin: "10px",
-          }}/>
+          }}
+        />
+        {new Map(user.sites).has(initSite.toString()) ? (
+          <Button
+            type="primary"
+            danger
+            icon={<PlusOutlined />}
+            onClick={() => {
+              user.deleteSite(initSite);
+            }}
+          />
+        ) : (
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            disabled={initSite.site === ""}
+            onClick={() => {
+              user.addSite(initSite);
+            }}
+          />
+        )}
       </div>
       <div
-          style={{
-            flexShrink: 1,
-            margin: "10px",
-            height: "40px",
-            fontSize: "35px",
-            fontWeight: "600",
-          }}
-          onClick={()=>{
-            user.addSite(initSite);
-          }}
-          >{pass}</div>
+        style={{
+          flexShrink: 1,
+          margin: "10px",
+          height: "40px",
+          fontSize: "30px",
+          fontWeight: "600",
+        }}
+        onClick={() => {
+          // user.addSite(initSite);
+        }}
+      >
+        {pass}
+      </div>
     </div>
   );
 });
