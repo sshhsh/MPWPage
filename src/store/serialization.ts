@@ -27,7 +27,6 @@ export function replacer(key: string, value: any): any {
             value: Array.from(value.entries()),
         };
     } else {
-        console.log(Object.prototype.toString.call(value));
         return value;
     }
 }

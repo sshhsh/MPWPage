@@ -1,6 +1,7 @@
-import { PlusOutlined } from "@ant-design/icons";
+import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Input, InputNumber, Select, Typography } from "antd";
 import { observer } from "mobx-react-lite";
+import React from "react";
 import { generate, PassParams, Template } from "../mpw";
 import { Site } from "../store/entity/site";
 import { User } from "../store/entity/user";
@@ -12,6 +13,7 @@ type params = {
 
 export const NewSite = observer(({ user, initSite }: params) => {
   const pass = generate(initSite);
+  const passNode = React.createRef<HTMLDivElement>();
   return (
     <div
       style={{
@@ -66,7 +68,7 @@ export const NewSite = observer(({ user, initSite }: params) => {
           <Button
             type="primary"
             danger
-            icon={<PlusOutlined />}
+            icon={<MinusOutlined />}
             onClick={() => {
               user.deleteSite(initSite);
             }}
@@ -90,8 +92,22 @@ export const NewSite = observer(({ user, initSite }: params) => {
           fontSize: "30px",
           fontWeight: "600",
         }}
+        ref={passNode}
         onClick={() => {
           // user.addSite(initSite);
+          const s = window.getSelection();
+          if (s === null) {
+            return;
+          }
+          if (s.rangeCount > 0) s.removeAllRanges();
+          const range = document.createRange();
+          const node = passNode.current;
+          if (node === null) {
+            return;
+          }
+          range.selectNode(node);
+          s.addRange(range);
+          navigator.clipboard.writeText(pass);
         }}
       >
         {pass}
